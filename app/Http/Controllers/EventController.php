@@ -13,7 +13,7 @@ class EventController extends Controller
     // Display all available events
     public function index()
     {
-        $events = Event::with('venue')->orderBy('start_date', 'asc')->paginate(6);
+        $events = Event::with('venue')->orderBy('start_date', 'asc')->paginate(100);
         return view('events.index', compact('events'));
     }
 
@@ -62,8 +62,8 @@ class EventController extends Controller
         return redirect()->route('login')->with('error', 'Please log in first.');
     }
 
-
-    $bookedEvents = $user->bookedEvents;
+    // Eager load the feedback relationship
+    $bookedEvents = $user->bookedEvents()->with('feedback')->get();
 
     return view('mybookings', compact('bookedEvents'));
 }

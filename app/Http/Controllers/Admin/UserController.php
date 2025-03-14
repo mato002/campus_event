@@ -13,7 +13,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = RegularUser::paginate(10); // Fetch users with pagination
+        $users = RegularUser::paginate(7); // Fetch users with pagination
         return view('admin.manage-users', compact('users'));
     }
 

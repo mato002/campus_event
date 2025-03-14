@@ -5,7 +5,7 @@ use App\Http\Controllers\Admin\EventController as AdminEventController;
 use App\Http\Controllers\Admin\VenueController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\userDashboardController;
-
+use App\Http\Controllers\FeedbackController ;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\AdminProfileController;
@@ -32,9 +32,7 @@ use App\Http\Controllers\SearchController;
 */
 
 // === USER-FACING ROUTES === //
-Route::get('/home', function () {
-    return view('home');
-})->name('home');
+Route::get('/home', [userDashboardController::class, 'index'])->name('home');
 
 // Events
 Route::get('/events', [EventController::class, 'index'])->name('events.index');
@@ -84,6 +82,8 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::resource('venues', VenueController::class);
     Route::get('manage-users', [UserController::class, 'index'])->name('manage-users');
     Route::delete('manage-users/{id}', [UserController::class, 'destroy'])->name('manage-users.destroy');
+    
+    
 
 
 
@@ -152,6 +152,10 @@ Route::middleware(['auth:regular_user'])->group(function () {
     Route::POST('/book-event/{eventId}', [EventController::class, 'bookEvent'])->name('book.event');
     Route::get('/mybookings', [EventController::class, 'myBookings'])->name('my.bookings');
     Route::delete('/cancel-booking/{eventId}', [EventController::class, 'cancelBooking'])->name('cancel.booking');
+    Route::post('/feedback', [FeedbackController::class, 'submitFeedback'])->name('feedback.submit');
+    Route::post('events/{event}/feedback', [FeedbackController::class, 'store'])->name('event.feedback.store');
+
+
 });
 
 

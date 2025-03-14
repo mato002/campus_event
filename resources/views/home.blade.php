@@ -9,7 +9,7 @@
     
     <!-- Browse Events Button -->
     <div class="browse-button-container">
-        <a href="#" class="browse-button">Browse Events</a>
+<a href="{{ route('events.index') }}" class="browse-button">Browse Events</a>
     </div>
 </div>
 
@@ -18,21 +18,26 @@
     <h2 class="section-title">Statistics</h2>
     <div class="statistics-container">
         <div class="statistics-item">
-            <h3>Members</h3>
-            <p class="statistic-number">1,234</p>
-        </div>
+        <h3 class="text-lg font-semibold mb-2"> Members </h3>
+        <p class="text-3xl text-blue-600 font-bold">{{ $totalRegularUsers }}</p>
+            </div>
         <div class="statistics-item">
-            <h3>Events</h3>
-            <p class="statistic-number">25</p>
+        <h3 class="text-lg font-semibold mb-2">Total Events</h3>
+        <p class="text-3xl text-blue-600 font-bold">{{ $totalEvents }}</p>
         </div>
         <div class="statistics-item">
             <h3>Upcoming Events</h3>
-            <p class="statistic-number">5</p>
+            <p class="text-3xl text-purple-600 font-bold">{{ $upcomingEvents }}</p>
         </div>
         <div class="statistics-item">
             <h3>Feedbacks</h3>
             <p class="statistic-number">150</p>
         </div>
+        <div class="statistics-item">
+            <h3 class="text-lg font-semibold mb-2">My Booked Events</h3>
+            <p class="text-3xl text-green-600 font-bold">{{ $bookedEvents }}</p>
+        </div>
+
     </div>
 </div>
 
@@ -139,6 +144,7 @@
         text-align: center;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         transition: transform 0.3s;
+        margin-bottom: 40px;
     }
 
     .statistics-item:hover {

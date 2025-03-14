@@ -65,7 +65,7 @@
                             <p><strong>Role:</strong> Administrator</p>
                             <hr class="my-2">
                             <!-- Added hover effects to the links -->
-                            <a href="{{ route('dashboard') }}" class="block px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white">Website</a>
+                            <a href="{{ route('home') }}" class="block px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white">Website</a>
                             <a href="#" class="block px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white">Edit Profile</a>
 
                             <!-- Logout Section -->
@@ -117,6 +117,8 @@
             }
         });
     </script>
+
+@yield('scripts')
 
 </body>
 </html>

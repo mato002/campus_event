@@ -45,5 +45,10 @@ public function regularUsers()
     return $this->belongsToMany(RegularUser::class, 'event_regular_user')
                 ->withTimestamps();
 }
+// In App\Models\Event.php
+public function feedback()
+{
+    return $this->hasMany(EventFeedback::class);
+}
 
 }
