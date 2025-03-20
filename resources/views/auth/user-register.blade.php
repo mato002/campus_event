@@ -6,6 +6,7 @@
     <title>User Registration</title>
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <style>
+        /* Same CSS as before for styling */
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f9;
@@ -68,37 +69,100 @@
         .auth-links a:hover {
             text-decoration: underline;
         }
+        .alert {
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
     <h2>User Registration</h2>
+
+    {{-- Success Message --}}
+    @if (session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    {{-- Error Messages --}}
+    @if ($errors->any())
+        <div class="alert alert-error">
+            <ul style="margin: 0; padding-left: 20px;">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    {{-- Registration Form --}}
     <form action="{{ route('user.register') }}" method="POST">
         @csrf
+
         <div class="form-group">
             <label for="name">Name:</label>
-            <input type="text" name="name" id="name" required>
+            <input 
+                type="text" 
+                name="name" 
+                id="name" 
+                value="{{ old('name') }}" 
+                required
+            >
         </div>
+
         <div class="form-group">
             <label for="email">Email:</label>
-            <input type="email" name="email" id="email" required>
+            <input 
+                type="email" 
+                name="email" 
+                id="email" 
+                value="{{ old('email') }}" 
+                required
+            >
         </div>
+
         <div class="form-group">
             <label for="password">Password:</label>
-            <input type="password" name="password" id="password" required>
+            <input 
+                type="password" 
+                name="password" 
+                id="password" 
+                required
+            >
         </div>
+
         <div class="form-group">
             <label for="password_confirmation">Confirm Password:</label>
-            <input type="password" name="password_confirmation" id="password_confirmation" required>
+            <input 
+                type="password" 
+                name="password_confirmation" 
+                id="password_confirmation" 
+                required
+            >
         </div>
+
         <div class="form-group">
             <button type="submit">Register</button>
         </div>
     </form>
 
     <div class="auth-links">
-        <p>Already have an account? <a href="{{ route('user.login') }}">Login</a></p>
+        <p>Already have an account? 
+            <a href="{{ route('user.login') }}">Login</a>
+        </p>
     </div>
 </div>
 

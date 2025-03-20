@@ -13,7 +13,7 @@ class AdminBookingController extends Controller
     {
         $bookings = Event::with(['regularUsers'])
             ->whereHas('regularUsers')
-            ->paginate(10); // Paginate with 10 bookings per page
+            ->paginate(5); // Paginate with 10 bookings per page
 
 
         return view('admin.bookings', compact('bookings'));

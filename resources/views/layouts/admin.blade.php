@@ -22,7 +22,7 @@
     <div class="flex flex-1 flex-col sm:flex-row">
 
         <!-- Sidebar -->
-        <aside id="sidebar" class="bg-gray-800 text-white w-full sm:w-1/4 p-4 sm:p-6 flex flex-col space-y-4 hidden sm:flex transition-all duration-300">
+        <aside id="sidebar" class="bg-gray-800 text-white w-full sm:w-1/4 p-4 sm:p-6 flex flex-col space-y-4  sm:flex transition-all duration-300">
             <div class="text-2xl sm:text-3xl font-bold mb-4 sm:mb-8">
                 Campus Event Management
             </div>
