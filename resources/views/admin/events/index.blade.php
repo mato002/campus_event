@@ -22,7 +22,7 @@
             <tbody id="events-table-body">
                 @foreach ($events as $index => $event)
                     <tr class="border-b border-gray-300" id="event-row-{{ $event->id }}">
-                        <td class="px-6 py-2">{{ ($events->firstItem() + $index) }}</td>
+                        <td class="px-6 py-2">{{ $events->firstItem() + $index }}</td>
                         <td class="px-6 py-2">{{ $event->name }}</td>
                         <td class="px-6 py-2">{{ $event->category }}</td>
                         <td class="px-6 py-2">{{ $event->start_date }}</td>
@@ -59,6 +59,11 @@
         @else
             <span class="p-3 text-gray-400">No More Pages</span>
         @endif
+    </div>
+
+    <!-- Laravel's built-in pagination -->
+    <div class="mt-4">
+        {{ $events->links() }} <!-- Laravel's pagination links -->
     </div>
 </div>
 

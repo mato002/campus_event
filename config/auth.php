@@ -111,6 +111,14 @@ return [
             'expire' => 60,
             'throttle' => 60,
         ],
+            // ➡️ Add this block if it’s not already there
+            'regular_users' => [ // <- this is the one you're using in your controller
+                'provider' => 'regular_users',
+                'table' => 'password_resets', // <-- THIS MUST BE PRESENT!
+                'expire' => 60,
+                'throttle' => 60,
+            ],
+        
     ],
 
     /*

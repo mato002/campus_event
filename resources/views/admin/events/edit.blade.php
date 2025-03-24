@@ -24,7 +24,7 @@
 
     <!-- Form to update event -->
     <div class="bg-white shadow-lg rounded-lg p-6">
-        <form action="{{ route('admin.events.update', $event->id) }}" method="POST">
+        <form action="{{ route('admin.events.update', $event->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
 
@@ -65,9 +65,23 @@
                 </select>
             </div>
 
+            <!-- Event Image Upload -->
+            <div class="mb-4">
+                <label for="image" class="form-label text-lg font-medium text-gray-700">Event Image</label>
+                <input type="file" name="image" class="form-control w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                
+                @if ($event->image)
+                    <div class="mt-2 text-sm text-gray-600">
+                        <span class="font-medium">Uploaded File:</span> {{ basename($event->image) }}
+                    </div>
+                @endif
+            </div>
+
             <!-- Submit Button -->
             <div class="mt-6 text-center">
-                <button type="submit" class="btn bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out">Update Event</button>
+                <button type="submit" class="btn bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out">
+                    Update Event
+                </button>
             </div>
         </form>
     </div>

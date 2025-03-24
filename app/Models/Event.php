@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-
 use Illuminate\Database\Eloquent\Model;
 
 class Event extends Model
@@ -16,7 +15,8 @@ class Event extends Model
         'category',
         'start_date',
         'end_date',
-        'venue_id'
+        'venue_id',
+        'image', // Added 'image' to the fillable array
     ];
 
     /**
@@ -28,27 +28,22 @@ class Event extends Model
     }
 
     public function registrations()
-{
-    return $this->hasMany(EventRegistration::class);
-}
+    {
+        return $this->hasMany(EventRegistration::class);
+    }
 
+    public function bookedUsers(): BelongsToMany
+    {
+        return $this->belongsToMany(RegularUser::class, 'event_regular_user', 'event_id', 'regular_user_id')->withTimestamps();
+    }
 
+    public function regularUsers()
+    {
+        return $this->belongsToMany(RegularUser::class, 'event_regular_user')->withTimestamps();
+    }
 
-public function bookedUsers(): BelongsToMany
-{
-    return $this->belongsToMany(RegularUser::class, 'event_regular_user', 'event_id', 'regular_user_id')->withTimestamps();
-}
-
-
-public function regularUsers()
-{
-    return $this->belongsToMany(RegularUser::class, 'event_regular_user')
-                ->withTimestamps();
-}
-// In App\Models\Event.php
-public function feedback()
-{
-    return $this->hasMany(EventFeedback::class);
-}
-
+    public function feedback()
+    {
+        return $this->hasMany(EventFeedback::class);
+    }
 }

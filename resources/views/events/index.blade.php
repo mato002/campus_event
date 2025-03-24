@@ -12,18 +12,28 @@
         <h2 class="section-title">Upcoming Events</h2>
 
         @if($events->count() > 0)
-            <div class="row">
+            <div class="event-grid">
                 @foreach($events as $event)
-                    <div class="col-md-4 mb-4">
-                        <div class="event-card">
-                            <div class="event-info">
+                    <div class="event-card">
+                        <div class="event-info d-flex">
+                            <!-- Display Event Image -->
+                            <div class="event-image-container">
+                                @if($event->image)
+                                    <img src="{{ asset('storage/' . $event->image) }}" alt="{{ $event->name }}" class="event-image mb-3">
+                                @else
+                                    <img src="{{ asset('images/default-event.jpg') }}" alt="Default Image" class="event-image mb-3">
+                                @endif
+                            </div>
+
+                            <!-- Event Details -->
+                            <div class="event-details ml-4">
                                 <h5 class="event-title">{{ $event->name }}</h5>
                                 <p><strong>Category:</strong> {{ $event->category }}</p>
                                 <p><strong>Venue:</strong> {{ $event->venue->name }}</p>
                                 <p><strong>Date:</strong> {{ \Carbon\Carbon::parse($event->start_date)->format('M d, Y') }}</p>
                             </div>
-                            <a href="{{ route('events.show', $event->id) }}" class="event-btn">View Details</a>
                         </div>
+                        <a href="{{ route('events.show', $event->id) }}" class="event-btn">View Details</a>
                     </div>
                 @endforeach
             </div>
@@ -66,23 +76,59 @@
         color: #333;
     }
 
+    /* Event Grid Layout */
+    .event-grid {
+        display: flex;
+        flex-wrap: wrap; /* Allow items to wrap onto the next line */
+        justify-content: space-between; /* Distribute events evenly */
+        gap: 30px; /* Add space between the cards */
+    }
+
     /* Event Cards */
     .event-card {
         background: white;
         border-radius: 10px;
         padding: 20px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 350px; /* Set max width for each card */
         transition: transform 0.3s ease-in-out;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        height: 100%;
     }
+
     .event-card:hover {
         transform: scale(1.05);
     }
 
-    .event-info h5 {
+    /* Flex layout for image and event details */
+    .event-info {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .event-image-container {
+        flex-shrink: 0;
+        width: 120px;
+        height: 100px;
+    }
+
+    .event-image {
+        width: 100%;
+        height: 100%;
+        border-radius: 8px;
+        object-fit: cover;
+    }
+
+    /* Event Details */
+    .event-details {
+        flex-grow: 1;
+        margin-left: 20px;
+    }
+
+    .event-title {
         color: #007bff;
         font-size: 1.4rem;
         margin-bottom: 10px;
@@ -108,6 +154,7 @@
         transition: background 0.3s ease-in-out;
         margin-top: 15px;
     }
+
     .event-btn:hover {
         background: linear-gradient(to right, #0056b3, #008cff);
     }
@@ -118,6 +165,7 @@
         justify-content: center;
         margin-top: 20px;
     }
+
     .pagination {
         display: flex;
         list-style: none;
@@ -161,12 +209,37 @@
         border-color: #ddd;
     }
 
-
     /* No Events */
     .no-events {
         text-align: center;
         font-size: 1.2rem;
         color: #777;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .event-info {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .event-image-container {
+            width: 100%;
+            height: auto;
+            margin-bottom: 10px;
+        }
+
+        .event-details {
+            margin-left: 0;
+        }
+
+        .event-grid {
+            justify-content: center;
+        }
+
+        .event-card {
+            max-width: 100%; /* Allow the card to take full width on small screens */
+        }
     }
 </style>
 @endsection

@@ -4,13 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Campus Event Management</title>
+
+    <!-- ✅ Google Fonts and FontAwesome CDN -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     @yield('styles')
 
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Roboto', Arial, sans-serif;
             margin: 0;
             padding: 0;
             background-color: #f4f4f4;
@@ -26,7 +31,7 @@
             padding: 10px 20px;
             border-bottom: 1px solid #ddd;
             gap: 20px;
-            flex-wrap: wrap; /* Responsive wrapping */
+            flex-wrap: wrap;
         }
 
         .search-container {
@@ -179,19 +184,21 @@
         footer {
             background-color: #003d80;
             color: white;
-            padding: 20px;
+            padding: 30px 20px;
         }
 
         footer .footer-container {
             display: flex;
             justify-content: space-between;
             flex-wrap: wrap;
+            gap: 20px;
         }
 
         footer .footer-section {
             flex: 1;
             padding: 10px;
-            min-width: 200px;
+            min-width: 250px;
+            margin-bottom: 20px;
         }
 
         footer ul {
@@ -210,6 +217,45 @@
 
         footer ul li a:hover {
             text-decoration: underline;
+        }
+
+        /* ✅ Social Icons */
+        .social-icons a {
+            color: white;
+            margin-bottom: 15px;
+            text-decoration: none;
+            transition: color 0.3s, text-decoration 0.3s;
+            display: flex;
+            align-items: center;
+            font-size: 18px;
+        }
+
+        .social-icons a i {
+            margin-right: 10px;
+            font-size: 24px;
+        }
+
+        .social-icons a:hover {
+            color: #0056b3;
+        }
+
+        .social-btn {
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .social-btn:hover {
+            background-color: #333;
+            color: white;
+        }
+
+        /* ✅ Copyright */
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #ccc;
+            color: #ccc;
         }
 
         /* ✅ Responsive Styles */
@@ -238,6 +284,11 @@
             header h1 {
                 font-size: 20px;
             }
+
+            footer .footer-container {
+                flex-direction: column;
+                align-items: center;
+            }
         }
     </style>
 </head>
@@ -249,7 +300,7 @@
         <div class="search-container">
             <form action="/search" method="GET">
                 <input type="text" name="query" placeholder="Search events..." required>
-                <button type="submit">🔍</button>
+                <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
             </form>
         </div>
 
@@ -303,27 +354,38 @@
             <div class="footer-section">
                 <h3>Follow Us</h3>
                 <div class="social-icons">
-                    <a href="#">Facebook</a> |
-                    <a href="#">Instagram</a> |
-                    <a href="#">Twitter</a> |
-                    <a href="#">YouTube</a>
+                    <a href="#" class="social-btn"><i class="fab fa-facebook-f"></i>Facebook</a>
+                    <a href="#" class="social-btn"><i class="fab fa-instagram"></i>Instagram</a>
+                    <a href="#" class="social-btn"><i class="fab fa-twitter"></i>Twitter</a>
+                    <a href="#" class="social-btn"><i class="fab fa-youtube"></i>YouTube</a>
                 </div>
             </div>
+
             <div class="footer-section">
                 <h3>Important Links</h3>
                 <ul>
-                    <li><a href="/home">Home</a></li>
-                    <li><a href="/events">Events</a></li>
-                    <li><a href="/categories">Categories</a></li>
-                    <li><a href="/about">About</a></li>
-                    <li><a href="/contact">Contact</a></li>
+                    <li><a href="/home">> Home</a></li>
+                    <li><a href="/events">> Events</a></li>
+                    <li><a href="/categories">> Categories</a></li>
+                    <li><a href="/about">> About</a></li>
+                    <li><a href="/contact">> Contact</a></li>
                 </ul>
             </div>
+
             <div class="footer-section">
                 <h3>Contact Info</h3>
                 <ul>
-                    <li>📍 123 Campus Street</li>
-                    <li>📧 email@example.com</li>
-                    <li>📞 +254 728 883 160</li>
+                    <li>123 Campus Street</li>
+                    <li>mathiasodhis@gmail.com</li>
+                    <li>+254 728 883 160</li>
                 </ul>
             </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2025 Matech Technologies. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+</body>
+</html>

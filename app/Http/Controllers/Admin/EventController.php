@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
@@ -6,30 +7,30 @@ use App\Http\Controllers\Controller;
 use App\Models\Event;
 use App\Models\Venue;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class EventController extends Controller
 {
     public function index()
     {
-        $events = Event::with('venue')->orderBy('id', 'asc')->paginate(5); // Paginate results (5 per page)
+        // Paginate events with 5 events per page
+        $events = Event::with('venue')->orderBy('id', 'asc')->paginate(5);
         return view('admin.events.index', compact('events'));
     }
 
     public function create()
     {
+        // Get all available venues for event creation
         $venues = Venue::all();
         return view('admin.events.create', compact('venues'));
     }
 
     public function show($id)
-{
-    // Find the event by its ID
-    $event = Event::findOrFail($id);
-
-    // Return the view with the event data
-    return view('admin.events.show', compact('event'));
-}
-
+    {
+        // Find the event by its ID
+        $event = Event::findOrFail($id);
+        return view('admin.events.show', compact('event'));
+    }
 
     public function store(Request $request)
     {
@@ -42,9 +43,25 @@ class EventController extends Controller
                 'start_date' => 'required|date',
                 'end_date' => 'required|date|after:start_date',
                 'venue_id' => 'required|exists:venues,id',
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validation for image
             ]);
 
-            $event = Event::create($validated);
+            // Handle image upload if it exists
+            $imagePath = null;
+            if ($request->hasFile('image')) {
+                $imagePath = $request->file('image')->store('events', 'public');
+            }
+
+            // Create event with the validated data and image path
+            $event = Event::create([
+                'name' => $validated['name'],
+                'category' => $validated['category'],
+                'start_date' => $validated['start_date'],
+                'end_date' => $validated['end_date'],
+                'venue_id' => $validated['venue_id'],
+                'image' => $imagePath, // Store the image path
+            ]);
+
             Log::info('Event Created Successfully', ['event' => $event]);
 
             return response()->json([
@@ -69,11 +86,9 @@ class EventController extends Controller
 
     public function edit($id)
     {
-        // Find the event by its ID
+        // Find the event by its ID and get all available venues for the edit form
         $event = Event::with('venue')->findOrFail($id);
-        $venues = Venue::all();  // Fetch all available venues
-
-        // Return the view with the event data
+        $venues = Venue::all();
         return view('admin.events.edit', compact('event', 'venues'));
     }
 
@@ -89,7 +104,18 @@ class EventController extends Controller
             'start_date' => 'required|date',
             'end_date' => 'required|date|after:start_date',
             'venue_id' => 'required|exists:venues,id',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Image validation
         ]);
+
+        // Handle image upload if it exists
+        if ($request->hasFile('image')) {
+            // Delete the old image if it exists
+            if ($event->image) {
+                Storage::delete('public/' . $event->image);
+            }
+            $imagePath = $request->file('image')->store('events', 'public');
+            $validated['image'] = $imagePath;
+        }
 
         // Update the event
         $event->update($validated);
@@ -101,12 +127,19 @@ class EventController extends Controller
     public function destroy($id)
     {
         try {
-            // Find and delete the event
+            // Find the event by its ID
             $event = Event::findOrFail($id);
+
+            // Delete the associated image if it exists
+            if ($event->image) {
+                Storage::delete('public/' . $event->image);
+            }
+
+            // Delete the event
             $event->delete();
 
             // Log deletion success
-            Log::info('Event Deleted Successfully', ['event_id' =>$id]);
+            Log::info('Event Deleted Successfully', ['event_id' => $id]);
 
             // Return success message as JSON
             return response()->json(['success' => true, 'message' => 'Event deleted successfully!']);
@@ -116,22 +149,6 @@ class EventController extends Controller
 
             // Return error message as JSON
             return response()->json(['success' => false, 'message' => 'Error deleting event.'], 500);
-
-
-
-{
-    $event = Event::find($id);
-
-    if (!$event) {
-        return response()->json(['success' => false, 'message' => 'Event not found.'], 404);
-    }
-
-    $event->delete();
-
-    return response()->json(['success' => true, 'message' => 'Event deleted successfully.']);
-}
-
         }
     }
-    
 }
