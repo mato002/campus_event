@@ -39,9 +39,10 @@
                     Back to Events
                 </a>
 
-                <form method="POST" action="{{ route('book.event', $event->id) }}">
+                <!-- Booking Form -->
+                <form id="bookEventForm" method="POST" action="{{ route('book.event', $event->id) }}">
                     @csrf
-                    <button type="submit" class="px-6 py-3 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-200">
+                    <button type="submit" id="bookEventButton" class="px-6 py-3 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-200" onclick="showBookingPopup(event)">
                         Book Event
                     </button>
                 </form>
@@ -49,6 +50,39 @@
         </div>
     </div>
 </div>
+
+<!-- Booking Popup -->
+<div id="bookingPopup" class="booking-popup" style="display: none;">
+    <div class="popup-content">
+        @if(session('status') === 'success')
+            <p>Your event has been successfully booked!</p>
+        @else
+            <p>This event has already passed, and you cannot book it.</p>
+        @endif
+        <button onclick="closeBookingPopup()">OK</button>
+    </div>
+</div>
+
+<script>
+    // Function to display the booking popup
+    function showBookingPopup(e) {
+        e.preventDefault(); // Prevent the form submission (page reload)
+
+        // Show the popup
+        document.getElementById('bookingPopup').style.display = 'block';
+
+        // Simulate form submission after 1 second (for the demo)
+        setTimeout(function() {
+            document.getElementById('bookEventForm').submit(); // Submit the form to actually book the event
+        }, 1000);
+    }
+
+    // Function to close the popup
+    function closeBookingPopup() {
+        document.getElementById('bookingPopup').style.display = 'none';
+    }
+</script>
+
 @endsection
 
 @section('styles')
@@ -161,6 +195,37 @@
     }
 
     .hover\:bg-blue-600:hover {
+        background-color: #0056b3;
+    }
+
+    /* Booking Popup */
+    .booking-popup {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+    }
+
+    .popup-content p {
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+    }
+
+    .popup-content button {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .popup-content button:hover {
         background-color: #0056b3;
     }
 </style>

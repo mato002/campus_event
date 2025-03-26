@@ -9,11 +9,12 @@
     </div>
 
     <div class="container mt-5">
+        <!-- Upcoming Events Section -->
         <h2 class="section-title">Upcoming Events</h2>
 
-        @if($events->count() > 0)
+        @if($upcomingEvents->count() > 0)
             <div class="event-grid">
-                @foreach($events as $event)
+                @foreach($upcomingEvents as $event)
                     <div class="event-card">
                         <div class="event-info d-flex">
                             <!-- Display Event Image -->
@@ -37,12 +38,43 @@
                     </div>
                 @endforeach
             </div>
+        @else
+            <p class="no-events">No upcoming events available at the moment.</p>
+        @endif
+    </div>
 
-            <div class="pagination-container">
-                {{ $events->links() }}  <!-- Pagination -->
+    <div class="container mt-5">
+        <!-- Past Events Section -->
+        <h2 class="section-title">Past Events</h2>
+
+        @if($pastEvents->count() > 0)
+            <div class="event-grid">
+                @foreach($pastEvents as $event)
+                    <div class="event-card past-event-card">
+                        <div class="event-info d-flex">
+                            <!-- Display Event Image -->
+                            <div class="event-image-container">
+                                @if($event->image)
+                                    <img src="{{ asset('storage/' . $event->image) }}" alt="{{ $event->name }}" class="event-image mb-3">
+                                @else
+                                    <img src="{{ asset('images/default-event.jpg') }}" alt="Default Image" class="event-image mb-3">
+                                @endif
+                            </div>
+
+                            <!-- Event Details -->
+                            <div class="event-details ml-4">
+                                <h5 class="event-title">{{ $event->name }}</h5>
+                                <p><strong>Category:</strong> {{ $event->category }}</p>
+                                <p><strong>Venue:</strong> {{ $event->venue->name }}</p>
+                                <p><strong>Date:</strong> {{ \Carbon\Carbon::parse($event->start_date)->format('M d, Y') }}</p>
+                            </div>
+                        </div>
+                        <a href="{{ route('events.show', $event->id) }}" class="event-btn">View Details</a>
+                    </div>
+                @endforeach
             </div>
         @else
-            <p class="no-events">No events available at the moment.</p>
+            <p class="no-events">No past events available.</p>
         @endif
     </div>
 </div>
@@ -100,6 +132,12 @@
 
     .event-card:hover {
         transform: scale(1.05);
+    }
+
+    /* Past Event Card Style (Slight Visual Difference) */
+    .past-event-card {
+        background: #f9f9f9; /* Lighter background for past events */
+        border-left: 5px solid #ff6f61; /* Distinct border color */
     }
 
     /* Flex layout for image and event details */
