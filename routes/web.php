@@ -19,7 +19,11 @@ use App\Http\Controllers\UserLoginController;
 use App\Http\Controllers\UserRegisterController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\VerificationController;
+use App\Http\Controllers\UserCategoryController;
+use App\Http\Controllers\ContactController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +38,8 @@ Route::get('/faqs', fn() => view('faqs'))->name('faqs');
 Route::get('/contact', fn() => view('contact'))->name('contact');
 Route::get('/categories', fn() => view('categories.index'))->name('categories.index');
 
+
+
 // Public event pages
 Route::get('/events', [EventController::class, 'index'])->name('events.index');
 Route::get('/events/{id}', [EventController::class, 'show'])->name('events.show');
@@ -43,6 +49,9 @@ Route::middleware(['auth:regular_user', 'verified_user'])->group(function () {
     Route::get('/dashboard', [userDashboardController::class, 'index'])->name('dashboard');
     Route::get('/my-events', [EventController::class, 'myEvents'])->name('events.my_events');
     Route::get('/mybookings', [EventController::class, 'myBookings'])->name('my.bookings');
+    // Route for storing event feedback
+Route::post('/event/{event}/feedback', [FeedbackController::class, 'store'])->name('event.feedback.store');
+
 
     // Profile routes
     Route::get('/user/profile', [UserProfileController::class, 'index'])->name('user.profile');
@@ -54,11 +63,9 @@ Route::middleware(['auth:regular_user', 'verified_user'])->group(function () {
     Route::post('/events/{id}/register', [EventController::class, 'register'])->name('events.register');
     Route::post('/book-event/{eventId}', [EventController::class, 'bookEvent'])->name('book.event');
     Route::delete('/cancel-booking/{eventId}', [EventController::class, 'cancelBooking'])->name('cancel.booking');
-
-    // Feedback
-    Route::post('/feedback', [FeedbackController::class, 'submitFeedback'])->name('feedback.submit');
-    Route::post('events/{event}/feedback', [FeedbackController::class, 'store'])->name('event.feedback.store');
-});
+    Route::get('/categories', [UserCategoryController::class, 'index'])->name('categories.index');
+    Route::get('/categories/{category}', [UserCategoryController::class, 'eventsByCategory'])->name('events.byCategory');
+    });
 
 /*
 |--------------------------------------------------------------------------
@@ -69,6 +76,14 @@ Route::middleware(['auth:regular_user', 'verified_user'])->group(function () {
 // Registration (Step 1)
 Route::get('/user/register', [UserRegisterController::class, 'showRegistrationForm'])->name('user.register');
 Route::post('/user/register', [UserRegisterController::class, 'register']);
+// Route to show the contact form (GET method)
+Route::get('/contact/form', [ContactController::class, 'showForm'])->name('contact.form');
+
+// Route to handle form submission (POST method)
+Route::post('/contact/send', [ContactController::class, 'send'])->name('contact.send');
+Route::get('/search', [App\Http\Controllers\SearchController::class, 'search'])->name('search');
+
+
 
 // Verification (Step 2)
 Route::get('/user/verify-email', [VerificationController::class, 'showVerificationForm'])->name('verification.notice');
@@ -103,6 +118,8 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     // Event & Venue Management
     Route::resource('events', AdminEventController::class);
     Route::resource('venues', VenueController::class);
+    Route::resource('categories',CategoryController::class);
+
 
     // User Management
     Route::get('manage-users', [UserController::class, 'index'])->name('manage-users');

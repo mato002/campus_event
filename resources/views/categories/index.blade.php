@@ -5,37 +5,18 @@
     <h1 class="page-title">Event Categories</h1>
     
     <div class="categories-container">
-        <div class="category-item">
-            <div class="category-icon">🎤</div>
-            <h3><a href="#">Music & Entertainment</a></h3>
-        </div>
-        
-        <div class="category-item">
-            <div class="category-icon">📚</div>
-            <h3><a href="#">Educational & Workshops</a></h3>
-        </div>
-        
-        <div class="category-item">
-            <div class="category-icon">⚽</div>
-            <h3><a href="#">Sports & Fitness</a></h3>
-        </div>
-        
-        <div class="category-item">
-            <div class="category-icon">🎭</div>
-            <h3><a href="#">Cultural & Arts</a></h3>
-        </div>
-        
-        <div class="category-item">
-            <div class="category-icon">🎓</div>
-            <h3><a href="#">Career & Networking</a></h3>
-        </div>
+        @foreach ($categories as $category)
+            <div class="category-item">
+                <div class="category-icon"></div>
+                <h3><a href="{{ route('events.byCategory', ['category' => $category->id]) }}">{{ $category->name }}</a></h3>
+            </div>
+        @endforeach
     </div>
 </div>
 @endsection
 
 @section('styles')
 <style>
-    /* General Page Styles */
     .page-container {
         width: 80%;
         margin: 30px auto;
@@ -52,7 +33,6 @@
         color: #0056b3;
     }
 
-    /* Categories Container */
     .categories-container {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));

@@ -20,7 +20,7 @@
             <tr class="bg-gray-100">
                 <td class="px-4 py-2">1</td>
                 <td class="px-4 py-2">{{ $event->name }}</td>
-                <td class="px-4 py-2">{{ $event->category }}</td>
+                <td class="px-4 py-2">{{ $event->category ->name }}</td>
                 <td class="px-4 py-2">{{ $event->start_date }}</td>
                 <td class="px-4 py-2">{{ $event->end_date }}</td>
                 <td class="px-4 py-2">{{ $event->venue->name ?? 'N/A' }}</td>

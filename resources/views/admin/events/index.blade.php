@@ -24,7 +24,7 @@
                     <tr class="border-b border-gray-300" id="event-row-{{ $event->id }}">
                         <td class="px-6 py-2">{{ $events->firstItem() + $index }}</td>
                         <td class="px-6 py-2">{{ $event->name }}</td>
-                        <td class="px-6 py-2">{{ $event->category }}</td>
+                        <td class="px-6 py-2">{{ $event->category->name ?? 'No Category' }}</td> <!-- FIXED -->
                         <td class="px-6 py-2">{{ $event->start_date }}</td>
                         <td class="px-6 py-2">{{ $event->end_date }}</td>
                         <td class="px-6 py-2">{{ $event->venue->name ?? 'No Venue' }}</td>

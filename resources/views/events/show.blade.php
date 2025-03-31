@@ -26,7 +26,7 @@
                 <div class="col-md-7">
                     <!-- Event Info -->
                     <h2 class="event-title">{{ $event->name }}</h2>
-                    <p class="event-category"><strong>Category:</strong> {{ $event->category }}</p>
+                    <p class="event-category"><strong>Category:</strong> {{ $event->category ->name }}</p>
                     <p class="event-venue"><strong>Venue:</strong> {{ $event->venue->name }}</p>
                     <p class="event-date"><strong>Date:</strong> {{ \Carbon\Carbon::parse($event->start_date)->format('M d, Y') }}</p>
                     <p class="event-description"><strong>Description:</strong> {{ $event->description ?? 'No description available.' }}</p>

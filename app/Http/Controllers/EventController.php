@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\RegularUser;
 use App\Models\Event;
+use App\Models\Category;
+
 
 class EventController extends Controller
 {
@@ -111,4 +113,16 @@ class EventController extends Controller
 
         return back()->with('success', 'Booking canceled successfully.');
     }
+
+    public function eventsByCategory($categoryId)
+    {
+        // Fetch the selected category
+        $category = Category::findOrFail($categoryId);
+
+        // Fetch events related to the category
+        $events = Event::where('category_id', $categoryId)->with(['venue', 'category'])->paginate(5);
+
+        return view('events.category', compact('events', 'category'));
+    }
+
 }

@@ -20,6 +20,10 @@ class RegularUser extends Authenticatable
         'profile_picture',
         'verification_code',
         'is_verified',
+        'phone',
+        'location',
+        'bio',
+
     ];
 
     protected $hidden = [

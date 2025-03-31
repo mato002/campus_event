@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -6,18 +7,12 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\RegularUser; // Ensure you use the correct model
 use Illuminate\Support\Facades\Storage; // Import Storage
 
-
 class UserProfileController extends Controller
 {
     public function index()
     {
         return view('user.profile');
     }
-    
-
-
-
-
 
     // Show Login Form
     public function showLoginForm()
@@ -33,7 +28,7 @@ class UserProfileController extends Controller
             'password' => 'required',
         ]);
 
-        if (Auth::attempt($credentials)) {
+        if (Auth::guard('regular_user')->attempt($credentials)) {
             return redirect()->route('user.profile'); // Redirect to profile
         }
 
@@ -51,17 +46,23 @@ class UserProfileController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users',
+            'email' => 'required|email|unique:regular_users',
             'password' => 'required|min:6|confirmed',
+            'phone' => 'nullable|string|max:15',
+            'location' => 'nullable|string|max:255',
+            'bio' => 'nullable|string',
         ]);
 
-        $user = \App\Models\User::create([
+        $user = RegularUser::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
+            'phone' => $request->phone,
+            'location' => $request->location,
+            'bio' => $request->bio,
         ]);
 
-        Auth::login($user);
+        Auth::guard('regular_user')->login($user);
         return redirect()->route('user.profile');
     }
 
@@ -73,13 +74,14 @@ class UserProfileController extends Controller
 
     // Process Logout
     public function logout(Request $request)
-{
-    Auth::guard('regular_user')->logout();
-    $request->session()->invalidate();
-    $request->session()->regenerateToken();
-    return redirect()->route('home');
-}
-public function edit()
+    {
+        Auth::guard('regular_user')->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect()->route('home');
+    }
+
+    public function edit()
     {
         $user = Auth::guard('regular_user')->user();
         return view('user.edit-profile', compact('user'));
@@ -94,6 +96,9 @@ public function edit()
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:regular_users,email,' . $user->id,
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'phone' => 'nullable|string|max:15',
+            'location' => 'nullable|string|max:255',
+            'bio' => 'nullable|string',
         ]);
 
         // Handle profile picture upload
@@ -111,10 +116,11 @@ public function edit()
             'name' => $request->name,
             'email' => $request->email,
             'profile_picture' => $user->profile_picture,
+            'phone' => $request->phone,
+            'location' => $request->location,
+            'bio' => $request->bio,
         ]);
 
         return redirect()->route('user.edit_profile')->with('success', 'Profile updated successfully!');
     }
-
-
 }

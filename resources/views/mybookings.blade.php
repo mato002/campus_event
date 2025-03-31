@@ -24,7 +24,7 @@
                         <!-- Event Information -->
                         <div class="sm:w-2/3 sm:pl-6">
                             <h3 class="text-xl font-semibold text-gray-800 mb-3">{{ $event->name }}</h3>
-                            <p class="text-gray-600 mb-1"><strong>Category:</strong> {{ $event->category }}</p>
+                            <p class="text-gray-600 mb-1"><strong>Category:</strong> {{ $event->category->name }}</p>
                             <p class="text-gray-600 mb-1"><strong>Venue:</strong> {{ $event->venue->name }}</p>
                             <p class="text-gray-600 mb-3"><strong>Date:</strong> {{ \Carbon\Carbon::parse($event->start_date)->format('M d, Y') }}</p>
                         </div>

@@ -29,9 +29,11 @@
             <h3>Upcoming Events</h3>
             <p class="text-3xl text-purple-600 font-bold">{{ $upcomingEvents }}</p>
         </div>
+    <!-- Total Feedbacks -->
         <div class="statistics-item">
-            <h3>Feedbacks</h3>
-            <p class="statistic-number">150</p>
+            <h3 class="text-lg font-semibold mb-2">Total Feedbacks</h3>
+            <p class="text-3xl text-purple-600 font-bold">{{ $totalFeedbacks }}</p>
+        </div>
         </div>
         <div class="statistics-item">
             <h3 class="text-lg font-semibold mb-2">My Booked Events</h3>
@@ -42,34 +44,31 @@
 </div>
 
 <!-- Feedback Section -->
+<!-- Feedback Section -->
 <div class="feedback-section">
     <h2 class="section-title">Latest Feedback</h2>
     <div class="feedback-container">
-        <div class="feedback-item">
-            <p>"Great event! Very informative."</p>
-            <span>- User 1</span>
-        </div>
-        <div class="feedback-item">
-            <p>"Had a fantastic time. Highly recommend!"</p>
-            <span>- User 2</span>
-        </div>
+        @foreach($latestFeedbacks as $feedback)
+            <div class="feedback-item">
+                <p>"{{ $feedback->comment }}"</p>
+                <span>- {{ $feedback->regularUser->name ?? 'Anonymous User' }}</span> <!-- Displaying the feedback giver's name -->
+            </div>
+        @endforeach
     </div>
 </div>
 
 <!-- Latest Events Section -->
+<!-- Latest Events Section -->
 <div class="latest-events-section">
     <h2 class="section-title">Latest Events</h2>
     <div class="latest-events-container">
-        <div class="latest-event-item">
-            <h3>Music Concert</h3>
-            <p>Join us for a night of great music.</p>
-            <a href="#" class="event-link">View Event</a>
-        </div>
-        <div class="latest-event-item">
-            <h3>Tech Workshop</h3>
-            <p>Learn new skills and get hands-on experience.</p>
-            <a href="#" class="event-link">View Event</a>
-        </div>
+        @foreach($latestEvents as $event)
+            <div class="latest-event-item">
+                <h3>{{ $event->name }}</h3>
+                <p>{{ Str::limit($event->description, 100) }}</p>
+                <a href="{{ route('events.show', $event->id) }}" class="event-link">View Event</a>
+            </div>
+        @endforeach
     </div>
 </div>
 

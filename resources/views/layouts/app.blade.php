@@ -11,9 +11,6 @@
 
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <!-- ✅ SweetAlert2 CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
     @yield('styles')
 
     <style>
@@ -300,9 +297,11 @@
 
     <!-- ✅ Top Bar with Search and Profile/Login/Register -->
     <div class="top-bar">
+
         <div class="search-container">
-            <form action="/search" method="GET">
-                <input type="text" name="query" placeholder="Search events..." required>
+            <form action="{{ route('search') }}" method="GET">
+
+                <input type="text" name="query" placeholder="Search events, venues, users, categories..." required>
                 <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
             </form>
         </div>
@@ -312,10 +311,8 @@
                 <div class="dropdown">
                     <button class="dropdown-btn">My Profile</button>
                     <div class="dropdown-content">
-                        <p>{{ Auth::guard('regular_user')->user()->name }}</p>
-                        <p>{{ Auth::guard('regular_user')->user()->email }}</p>
+                        <a href="{{ route('user.profile') }}">Profile</a>
                         <a href="{{ route('my.bookings') }}">My Bookings</a>
-                        <a href="{{ route('user.edit_profile') }}">Edit Profile</a>
 
                         <form id="logout-form" action="{{ route('user.logout') }}" method="POST" style="display: none;">
                             @csrf

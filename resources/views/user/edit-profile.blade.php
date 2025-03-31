@@ -1,48 +1,89 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
-        <h2>Edit Profile</h2>
+    <div class="profile-container">
+        <h2 class="page-title">Edit Profile</h2>
 
         @if(session('success'))
             <p class="alert alert-success">{{ session('success') }}</p>
         @endif
 
-        <form action="{{ route('user.update_profile') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('user.update_profile') }}" method="POST" enctype="multipart/form-data" class="profile-form">
             @csrf
 
             <!-- Profile Picture -->
             <div class="profile-picture-section">
-                <label for="profile_picture">Profile Picture:</label>
+                <label for="profile_picture" class="label">Profile Picture</label>
                 <img src="{{ asset('storage/profile_pictures/' . ($user->profile_picture ?? 'default-avatar.png')) }}" class="profile-preview">
-                <input type="file" name="profile_picture">
+                <input type="file" name="profile_picture" class="input-file">
                 @error('profile_picture') <p class="error">{{ $message }}</p> @enderror
             </div>
 
             <!-- Name -->
-            <label>Name:</label>
-            <input type="text" name="name" value="{{ $user->name }}" required>
-            @error('name') <p class="error">{{ $message }}</p> @enderror
+            <div class="input-group">
+                <label for="name" class="label">Name</label>
+                <input type="text" name="name" id="name" value="{{ $user->name }}" required class="input-field">
+                @error('name') <p class="error">{{ $message }}</p> @enderror
+            </div>
 
             <!-- Email -->
-            <label>Email:</label>
-            <input type="email" name="email" value="{{ $user->email }}" required>
-            @error('email') <p class="error">{{ $message }}</p> @enderror
+            <div class="input-group">
+                <label for="email" class="label">Email</label>
+                <input type="email" name="email" id="email" value="{{ $user->email }}" required class="input-field">
+                @error('email') <p class="error">{{ $message }}</p> @enderror
+            </div>
 
-            <!-- Save Button -->
-            <button type="submit" class="btn save-btn">Save Changes</button>
+            <!-- Bio -->
+            <div class="input-group">
+                <label for="bio" class="label">Bio</label>
+                <textarea name="bio" id="bio" rows="4" class="input-field">{{ $user->bio ?? '' }}</textarea>
+                @error('bio') <p class="error">{{ $message }}</p> @enderror
+            </div>
+
+            <!-- Phone Number -->
+            <div class="input-group">
+                <label for="phone" class="label">Phone Number</label>
+                <input type="text" name="phone" id="phone" value="{{ $user->phone ?? '' }}" class="input-field">
+                @error('phone') <p class="error">{{ $message }}</p> @enderror
+            </div>
+
+            <!-- Location -->
+            <div class="input-group">
+                <label for="location" class="label">Location</label>
+                <input type="text" name="location" id="location" value="{{ $user->location ?? '' }}" class="input-field">
+                @error('location') <p class="error">{{ $message }}</p> @enderror
+            </div>
+
+            <!-- Save and Back Buttons -->
+            <div class="button-group">
+                <a href="{{ route('user.profile') }}" class="btn back-btn">Back to Profile</a>
+                <button type="submit" class="btn save-btn">Save Changes</button>
+            </div>
         </form>
     </div>
 
     <!-- CSS -->
     <style>
-        .container {
-            max-width: 500px;
-            margin: 40px auto;
-            background: white;
-            padding: 20px;
+        .profile-container {
+            max-width: 100%;
+            margin: 0 auto;
+            background: #f9f9f9;
+            padding: 40px;
             border-radius: 8px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
+            font-family: Arial, sans-serif;
+        }
+
+        .page-title {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .profile-form {
+            max-width: 100%;
+            width: 100%;
         }
 
         .profile-picture-section {
@@ -51,45 +92,94 @@
         }
 
         .profile-preview {
-            width: 100px;
-            height: 100px;
+            width: 120px;
+            height: 120px;
             border-radius: 50%;
             object-fit: cover;
-            display: block;
-            margin: auto;
+            margin-bottom: 10px;
         }
 
-        input[type="text"], input[type="email"] {
-            width: 100%;
-            padding: 10px;
-            margin: 8px 0;
+        .input-file {
+            margin-top: 10px;
             border: 1px solid #ccc;
+            padding: 8px;
             border-radius: 5px;
         }
 
-        .btn {
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .label {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #444;
             display: block;
+        }
+
+        .input-field {
             width: 100%;
             padding: 10px;
-            text-align: center;
-            border: none;
+            border: 1px solid #ddd;
             border-radius: 5px;
-            font-weight: bold;
-            cursor: pointer;
+            margin-top: 5px;
+            font-size: 1rem;
+            color: #555;
+            transition: border 0.3s ease;
+        }
+
+        .input-field:focus {
+            border-color: #0056b3;
+            outline: none;
+        }
+
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .back-btn {
+            background: #888;
+            color: white;
+            text-decoration: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        .back-btn:hover {
+            background: #666;
         }
 
         .save-btn {
+            padding: 12px 20px;
             background: #0056b3;
             color: white;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
         }
 
         .save-btn:hover {
             background: #003d80;
         }
 
-        .error {
-            color: red;
-            font-size: 14px;
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            text-align: center;
         }
     </style>
 @endsection

@@ -30,6 +30,9 @@ class UserRegisterController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:regular_users,email',
             'password' => 'required|string|min:6|confirmed',
+            'phone' => 'nullable|string|max:15',
+            'location' => 'nullable|string|max:255',
+            'bio' => 'nullable|string',
         ]);
 
         if ($validator->fails()) {
@@ -39,13 +42,16 @@ class UserRegisterController extends Controller
         // Generate alphanumeric verification code
         $verificationCode = strtoupper(Str::random(8));  // Random 8-character code (mix of letters and numbers)
 
-        // Create a new regular user
+        // Create a new regular user with additional fields
         $regularUser = RegularUser::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'verification_code' => $verificationCode,
             'is_verified' => false, // Initially false
+            'phone' => $request->phone,
+            'location' => $request->location,
+            'bio' => $request->bio,
         ]);
 
         // Send verification email notification

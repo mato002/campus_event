@@ -16,25 +16,20 @@
             <div class="event-grid">
                 @foreach($upcomingEvents as $event)
                     <div class="event-card">
-                        <div class="event-info d-flex">
-                            <!-- Display Event Image -->
-                            <div class="event-image-container">
-                                @if($event->image)
-                                    <img src="{{ asset('storage/' . $event->image) }}" alt="{{ $event->name }}" class="event-image mb-3">
-                                @else
-                                    <img src="{{ asset('images/default-event.jpg') }}" alt="Default Image" class="event-image mb-3">
-                                @endif
+                        <div class="event-info">
+                            <!-- Event Image as Background -->
+                            <div class="event-image-container" style="background-image: url('{{ $event->image ? asset('storage/' . $event->image) : asset('images/default-event.jpg') }}');">
+                                <!-- Event Details on Top of the Image -->
+                                <div class="event-details">
+                                    <h5 class="event-title">{{ $event->name }}</h5>
+                                    <p><strong>Category:</strong> {{ $event->category->name}}</p>
+                                    <p><strong>Venue:</strong> {{ $event->venue->name }}</p>
+                                    <p><strong>Date:</strong> {{ \Carbon\Carbon::parse($event->start_date)->format('M d, Y') }}</p>
+                                </div>
                             </div>
-
-                            <!-- Event Details -->
-                            <div class="event-details ml-4">
-                                <h5 class="event-title">{{ $event->name }}</h5>
-                                <p><strong>Category:</strong> {{ $event->category }}</p>
-                                <p><strong>Venue:</strong> {{ $event->venue->name }}</p>
-                                <p><strong>Date:</strong> {{ \Carbon\Carbon::parse($event->start_date)->format('M d, Y') }}</p>
-                            </div>
+                            <!-- View Details Button -->
+                            <a href="{{ route('events.show', $event->id) }}" class="event-btn">View Details</a>
                         </div>
-                        <a href="{{ route('events.show', $event->id) }}" class="event-btn">View Details</a>
                     </div>
                 @endforeach
             </div>
@@ -51,25 +46,20 @@
             <div class="event-grid">
                 @foreach($pastEvents as $event)
                     <div class="event-card past-event-card">
-                        <div class="event-info d-flex">
-                            <!-- Display Event Image -->
-                            <div class="event-image-container">
-                                @if($event->image)
-                                    <img src="{{ asset('storage/' . $event->image) }}" alt="{{ $event->name }}" class="event-image mb-3">
-                                @else
-                                    <img src="{{ asset('images/default-event.jpg') }}" alt="Default Image" class="event-image mb-3">
-                                @endif
+                        <div class="event-info">
+                            <!-- Event Image as Background -->
+                            <div class="event-image-container" style="background-image: url('{{ $event->image ? asset('storage/' . $event->image) : asset('images/default-event.jpg') }}');">
+                                <!-- Event Details on Top of the Image -->
+                                <div class="event-details">
+                                    <h5 class="event-title">{{ $event->name }}</h5>
+                                    <p><strong>Category:</strong> {{ $event->category->name }}</p>
+                                    <p><strong>Venue:</strong> {{ $event->venue->name }}</p>
+                                    <p><strong>Date:</strong> {{ \Carbon\Carbon::parse($event->start_date)->format('M d, Y') }}</p>
+                                </div>
                             </div>
-
-                            <!-- Event Details -->
-                            <div class="event-details ml-4">
-                                <h5 class="event-title">{{ $event->name }}</h5>
-                                <p><strong>Category:</strong> {{ $event->category }}</p>
-                                <p><strong>Venue:</strong> {{ $event->venue->name }}</p>
-                                <p><strong>Date:</strong> {{ \Carbon\Carbon::parse($event->start_date)->format('M d, Y') }}</p>
-                            </div>
+                            <!-- View Details Button -->
+                            <a href="{{ route('events.show', $event->id) }}" class="event-btn">View Details</a>
                         </div>
-                        <a href="{{ route('events.show', $event->id) }}" class="event-btn">View Details</a>
                     </div>
                 @endforeach
             </div>
@@ -110,10 +100,10 @@
 
     /* Event Grid Layout */
     .event-grid {
-        display: flex;
-        flex-wrap: wrap; /* Allow items to wrap onto the next line */
-        justify-content: space-between; /* Distribute events evenly */
+        display: grid;
+        grid-template-columns: repeat(3, 1fr); /* Three columns layout */
         gap: 30px; /* Add space between the cards */
+        margin-top: 20px;
     }
 
     /* Event Cards */
@@ -122,12 +112,12 @@
         border-radius: 10px;
         padding: 20px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        width: 100%;
-        max-width: 350px; /* Set max width for each card */
         transition: transform 0.3s ease-in-out;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+        min-height: 450px; /* Ensure a consistent height for all cards */
+        max-width: 100%;
     }
 
     .event-card:hover {
@@ -136,49 +126,45 @@
 
     /* Past Event Card Style (Slight Visual Difference) */
     .past-event-card {
-        background: #f9f9f9; /* Lighter background for past events */
-        border-left: 5px solid #ff6f61; /* Distinct border color */
+        background: #f9f9f9;
+        border-left: 5px solid #ff6f61;
     }
 
     /* Flex layout for image and event details */
     .event-info {
         display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-
-    .event-image-container {
-        flex-shrink: 0;
-        width: 120px;
-        height: 100px;
-    }
-
-    .event-image {
-        width: 100%;
+        flex-direction: column;
+        gap: 10px;
+        position: relative;
         height: 100%;
-        border-radius: 8px;
-        object-fit: cover;
+        justify-content: space-between; /* Ensure button is at the bottom */
     }
 
-    /* Event Details */
+    /* Event Image Container */
+    .event-image-container {
+        position: relative;
+        width: 100%;
+        height: 90%; /* Image takes up 60% of the card height */
+        background-size: cover;
+        background-position: center;
+        border-radius: 8px;
+    }
+
     .event-details {
-        flex-grow: 1;
-        margin-left: 20px;
+        position: relative;
+        z-index: 1;
+        color: white;
+        background-color: rgba(0, 0, 0, 0.5);
+        padding: 10px;
+        border-radius: 8px;
+        width: calc(100% - 20px);
+        box-sizing: border-box;
     }
 
     .event-title {
-        color: #007bff;
-        font-size: 1.4rem;
-        margin-bottom: 10px;
+        font-size: 1.5rem;
     }
 
-    .event-info p {
-        font-size: 1rem;
-        color: #555;
-        margin-bottom: 5px;
-    }
-
-    /* View Details Button */
     .event-btn {
         display: block;
         text-align: center;
@@ -197,56 +183,6 @@
         background: linear-gradient(to right, #0056b3, #008cff);
     }
 
-    /* Pagination */
-    .pagination-container {
-        display: flex;
-        justify-content: center;
-        margin-top: 20px;
-    }
-
-    .pagination {
-        display: flex;
-        list-style: none;
-        padding: 0;
-        gap: 5px;
-    }
-
-    .pagination li {
-        display: inline-block;
-    }
-
-    .pagination li a,
-    .pagination li span {
-        display: inline-block;
-        padding: 8px 12px;
-        font-size: 14px;
-        border-radius: 6px;
-        text-decoration: none;
-        background: #f8f9fa;
-        color: #007bff;
-        border: 1px solid #ddd;
-        transition: all 0.3s ease;
-    }
-
-    .pagination li a:hover {
-        background: #007bff;
-        color: white;
-        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-    }
-
-    .pagination .active span {
-        background: #007bff;
-        color: white;
-        font-weight: bold;
-        border-color: #007bff;
-    }
-
-    .pagination .disabled span {
-        background: #e9ecef;
-        color: #adb5bd;
-        border-color: #ddd;
-    }
-
     /* No Events */
     .no-events {
         text-align: center;
@@ -255,28 +191,19 @@
     }
 
     /* Responsive Design */
-    @media (max-width: 768px) {
-        .event-info {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-
-        .event-image-container {
-            width: 100%;
-            height: auto;
-            margin-bottom: 10px;
-        }
-
-        .event-details {
-            margin-left: 0;
-        }
-
+    @media (max-width: 1024px) {
         .event-grid {
-            justify-content: center;
+            grid-template-columns: repeat(2, 1fr); /* Two columns on medium screens */
+        }
+    }
+
+    @media (max-width: 768px) {
+        .event-grid {
+            grid-template-columns: 1fr; /* Single column on small screens */
         }
 
         .event-card {
-            max-width: 100%; /* Allow the card to take full width on small screens */
+            min-height: 400px; /* Adjust height for smaller screens */
         }
     }
 </style>

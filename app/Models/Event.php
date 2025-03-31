@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,11 +13,12 @@ class Event extends Model
 
     protected $fillable = [
         'name',
-        'category',
+        'category_id', // Update 'category' to 'category_id'
         'start_date',
         'end_date',
         'venue_id',
         'image', // Added 'image' to the fillable array
+        'description',
     ];
 
     /**
@@ -25,6 +27,14 @@ class Event extends Model
     public function venue()
     {
         return $this->belongsTo(Venue::class);
+    }
+
+    /**
+     * Define the relationship: An Event belongs to a Category.
+     */
+    public function category()
+    {
+        return $this->belongsTo(Category::class); // Belongs to the Category model
     }
 
     public function registrations()
@@ -46,4 +56,5 @@ class Event extends Model
     {
         return $this->hasMany(EventFeedback::class);
     }
+    
 }

@@ -34,10 +34,23 @@
                 <input type="text" name="name" class="form-control w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" value="{{ old('name', $event->name) }}" required>
             </div>
 
+            <!-- Event Description -->
+            <div class="mb-4">
+                <label for="description" class="form-label text-lg font-medium text-gray-700">Description</label>
+                <textarea name="description" rows="5" class="form-control w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>{{ old('description', $event->description) }}</textarea>
+            </div>
+
             <!-- Event Category -->
             <div class="mb-4">
-                <label for="category" class="form-label text-lg font-medium text-gray-700">Category</label>
-                <input type="text" name="category" class="form-control w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" value="{{ old('category', $event->category) }}" required>
+                <label for="category_id" class="form-label text-lg font-medium text-gray-700">Category</label>
+                <select name="category_id" id="category_id" class="form-control w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    <option value="" disabled>Select a category</option>
+                    @foreach($categories as $category)
+                        <option value="{{ $category->id }}" {{ $event->category_id == $category->id ? 'selected' : '' }}>
+                            {{ $category->name }}
+                        </option>
+                    @endforeach
+                </select>
             </div>
 
             <!-- Start Date -->

@@ -1,29 +1,37 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
+    <div class="profile-container">
         <div class="profile-card">
-            <!-- Profile Picture Section -->
+            <!-- Profile Header -->
             <div class="profile-header">
-            <img src="{{ asset('storage/profile_pictures/' . (Auth::guard('regular_user')->user()->profile_picture ?? 'default-avatar.png')) }}" 
-            alt="Profile Picture" 
-                class="profile-picture">
-
-
-
+                <img src="{{ asset('storage/profile_pictures/' . (Auth::guard('regular_user')->user()->profile_picture ?? 'default-avatar.png')) }}" 
+                     alt="Profile Picture" 
+                     class="profile-picture">
                 <h2>{{ Auth::guard('regular_user')->user()->name }}</h2>
                 <p class="email">{{ Auth::guard('regular_user')->user()->email }}</p>
             </div>
 
-            <!-- Profile Details -->
+            <!-- Profile Details Section -->
             <div class="profile-details">
-                <h3>Profile Information</h3>
-                <p><strong>Phone:</strong> {{ Auth::guard('regular_user')->user()->phone ?? 'Not Provided' }}</p>
-                <p><strong>Joined On:</strong> {{ Auth::guard('regular_user')->user()->created_at->format('F d, Y') }}</p>
-                <p><strong>Role:</strong> Regular User</p>
+                <div class="detail-item">
+                    <span> Phone:</span> {{ Auth::guard('regular_user')->user()->phone ?? 'Not Provided' }}
+                </div>
+                <div class="detail-item">
+                    <span> Location:</span> {{ Auth::guard('regular_user')->user()->location ?? 'Not Provided' }}
+                </div>
+                <div class="detail-item">
+                    <span> Bio:</span> {{ Auth::guard('regular_user')->user()->bio ?? 'Not Provided' }}
+                </div>
+                <div class="detail-item">
+                    <span> Joined On:</span> {{ Auth::guard('regular_user')->user()->created_at->format('F d, Y') }}
+                </div>
+                <div class="detail-item">
+                    <span> Role:</span> Regular User
+                </div>
             </div>
 
-            <!-- Profile Actions -->
+            <!-- Profile Actions Section -->
             <div class="profile-actions">
                 <a href="{{ route('user.edit_profile') }}" class="btn edit-btn">Edit Profile</a>
                 <a href="{{ route('user.logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="btn logout-btn">
@@ -40,30 +48,49 @@
 
     <!-- Custom CSS for Profile Page -->
     <style>
-        .container {
-            max-width: 600px;
-            margin: 40px auto;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-            text-align: center;
+        body {
+            background-color: #f0f4f8;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .profile-container {
+            display: flex;
+            justify-content: center;
+            padding: 40px;
         }
 
         .profile-card {
-            padding: 20px;
+            width: 90%;
+            max-width: 1000px;
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
         }
 
         .profile-header {
-            margin-bottom: 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        .profile-header img {
-            width: 120px;
-            height: 120px;
+        .profile-picture {
+            width: 160px;
+            height: 160px;
             border-radius: 50%;
-            border: 3px solid #0056b3;
             object-fit: cover;
+            border: 3px solid #0056b3;
+            margin-bottom: 15px;
+        }
+
+        .profile-header h2 {
+            font-size: 1.8rem;
+            color: #333;
+            margin: 10px 0;
         }
 
         .email {
@@ -72,51 +99,64 @@
         }
 
         .profile-details {
-            text-align: left;
-            margin-top: 20px;
+            display: grid;
+            gap: 15px;
+            border-left: 2px solid #f0f0f0;
+            padding-left: 20px;
         }
 
-        .profile-details h3 {
-            border-bottom: 2px solid #ddd;
-            padding-bottom: 5px;
-            margin-bottom: 15px;
+        .detail-item {
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .profile-details p {
-            font-size: 16px;
-            margin: 8px 0;
+        .detail-item span {
+            font-weight: bold;
+            color: #0056b3;
         }
 
         .profile-actions {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
             margin-top: 20px;
+            grid-column: span 2;
         }
 
         .btn {
             display: inline-block;
-            padding: 10px 15px;
-            margin: 5px;
+            padding: 12px 20px;
+            border-radius: 6px;
             text-decoration: none;
-            border-radius: 5px;
+            color: white;
             font-weight: bold;
-            transition: 0.3s;
+            transition: background-color 0.3s;
         }
 
         .edit-btn {
-            background: #0056b3;
-            color: white;
+            background-color: #0056b3;
         }
 
         .edit-btn:hover {
-            background: #003d80;
+            background-color: #004099;
         }
 
         .logout-btn {
-            background: red;
-            color: white;
+            background-color: red;
         }
 
         .logout-btn:hover {
-            background: darkred;
+            background-color: darkred;
+        }
+
+        @media (max-width: 768px) {
+            .profile-card {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 @endsection
