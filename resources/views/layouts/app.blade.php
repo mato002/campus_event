@@ -327,21 +327,26 @@
         </div>
     </div>
 
-    <!-- ✅ Header Section -->
-    <header>
+<!-- ✅ Header Section -->
+<header>
+    <div style="display: flex; align-items: center; gap: 20px;">
+        <a href="{{ route('home') }}">
+            <img src="{{ asset('storage/logos/logo.png') }}" alt="Website Logo" style="height: 50px;">
+        </a>
         <h1>Campus Events</h1>
-        <nav>
-            <ul>
-                <li><a href="{{ route('home') }}">Home</a></li>
-                <li><a href="{{ route('events.index') }}">Events</a></li>
-                <li><a href="{{ route('categories.index') }}">Categories</a></li>
-                <li><a href="{{ route('my.bookings') }}">My Bookings</a></li>
-                <li><a href="{{ route('about') }}">About</a></li>
-                <li><a href="{{ route('faqs') }}">FAQs</a></li>
-                <li><a href="{{ route('contact') }}">Contact</a></li>
-            </ul>
-        </nav>
-    </header>
+    </div>
+    <nav>
+        <ul>
+            <li><a href="{{ route('home') }}">Home</a></li>
+            <li><a href="{{ route('events.index') }}">Events</a></li>
+            <li><a href="{{ route('categories.index') }}">Categories</a></li>
+            <li><a href="{{ route('my.bookings') }}">My Bookings</a></li>
+            <li><a href="{{ route('about') }}">About</a></li>
+            <li><a href="{{ route('faqs') }}">FAQs</a></li>
+            <li><a href="{{ route('contact') }}">Contact</a></li>
+        </ul>
+    </nav>
+</header>
 
     <!-- ✅ Main Content -->
     <div class="container">

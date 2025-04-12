@@ -5,27 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script> <!-- FontAwesome CDN -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    
 </head>
 <body class="flex flex-col min-h-screen">
 
     <!-- Header with toggle sidebar on mobile -->
     <header class="bg-gray-800 text-white flex items-center justify-between p-4 sm:hidden">
         <div class="text-lg font-bold">Campus Event Management</div>
+        <!-- Hamburger Icon -->
         <button id="mobile-menu-toggle" class="focus:outline-none">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-            </svg>
+            <i class="fas fa-bars text-white text-2xl"></i> <!-- FontAwesome Hamburger Icon -->
         </button>
     </header>
 
     <div class="flex flex-1 flex-col sm:flex-row">
 
         <!-- Sidebar -->
-        <aside id="sidebar" class="bg-gray-800 text-white w-full sm:w-1/4 p-4 sm:p-6 flex flex-col space-y-4  sm:flex transition-all duration-300">
-            <div class="text-2xl sm:text-3xl font-bold mb-4 sm:mb-8">
-                Campus Event Management
+        <aside id="sidebar" class="bg-gray-800 text-white w-full sm:w-1/4 p-4 sm:p-6 flex flex-col space-y-4 sm:flex transition-all duration-300">
+            <!-- Sidebar Branding (Logo + Name) -->
+            <div class="mb-8 flex items-center space-x-4 justify-center">
+                <img src="{{ url('storage/logos/logo.png') }}" 
+                     alt="Campus Event Management Logo" 
+                     class="h-12 w-auto rounded-full shadow-md">
+
+                <div class="text-2xl font-bold text-white tracking-wide">
+                    Campus Event Management
+                </div>
             </div>
 
             <ul class="space-y-2 sm:space-y-4 flex-grow">
@@ -58,12 +64,20 @@
 
         <!-- Main Content -->
         <div class="flex-1 flex flex-col">
-            <!-- Header with Profile and Logout -->
+            <!-- Header with Profile, Toggle Button, and Logout -->
             <div class="bg-gray-100 p-4 flex justify-between items-center">
-                <h1 class="text-xl sm:text-2xl font-semibold">Admin Dashboard</h1>
+                <div class="flex items-center space-x-4">
+                    <!-- Sidebar Toggle Button for Desktop and Mobile -->
+                    <button id="sidebar-toggle" class="sm:hidden focus:outline-none">
+                        <i class="fas fa-bars text-gray-800 text-2xl"></i> <!-- FontAwesome Hamburger Icon for Mobile -->
+                    </button>
+                    <h1 class="text-xl sm:text-2xl font-semibold">Admin Dashboard</h1>
+                </div>
 
                 <div class="relative">
                     <button id="profile-toggle" class="flex items-center space-x-2 text-gray-800 hover:text-gray-600 focus:outline-none">
+                        <!-- Admin Profile Picture -->
+                        <img src="{{ asset('storage/profile_pictures/logo.png') }}" alt="Profile Picture" class="h-8 w-8 rounded-full">
                         <span class="font-semibold text-sm sm:text-base">{{ Auth::user()->name }}</span>
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
@@ -136,6 +150,12 @@
         const sidebar = document.getElementById('sidebar');
 
         mobileMenuToggle && mobileMenuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('hidden');
+        });
+
+        // Sidebar visibility toggle for the three dashes button (Desktop and Mobile)
+        const sidebarToggle = document.getElementById('sidebar-toggle');
+        sidebarToggle.addEventListener('click', () => {
             sidebar.classList.toggle('hidden');
         });
     </script>

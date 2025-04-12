@@ -1,8 +1,25 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="max-w-6xl mx-auto bg-white shadow-lg rounded-lg p-6 mt-8">
+<div class="max-w-6xl mx-auto bg-white shadow-lg rounded-lg p-6 mt-4"> <!-- Changed mt-8 to mt-4 -->
     <h2 class="text-3xl font-bold text-gray-800 mb-6">User Bookings</h2>
+
+    <!-- Search Form -->
+    <form method="GET" action="{{ route('admin.bookings.index') }}" class="mb-6 flex items-center">
+        <input 
+            type="text" 
+            name="search" 
+            value="{{ request('search') }}" 
+            placeholder="Search by Event Name, User Name, or Email" 
+            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+        <button 
+            type="submit" 
+            class="ml-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-200"
+        >
+            Search
+        </button>
+    </form>
 
     @if ($bookings->isEmpty())
         <p class="text-gray-600 text-lg">No events have been booked yet.</p>

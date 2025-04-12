@@ -12,9 +12,25 @@ use Illuminate\Support\Facades\Storage;
 
 class EventController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $events = Event::with(['venue', 'category'])->orderBy('id', 'asc')->paginate(5);
+        $query = Event::with(['venue', 'category'])->orderBy('id', 'asc');
+
+        if ($request->has('search') && $request->search != '') {
+            $searchTerm = $request->search;
+
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('name', 'like', '%' . $searchTerm . '%')
+                  ->orWhereHas('category', function ($categoryQuery) use ($searchTerm) {
+                      $categoryQuery->where('name', 'like', '%' . $searchTerm . '%');
+                  })
+                  ->orWhereHas('venue', function ($venueQuery) use ($searchTerm) {
+                      $venueQuery->where('name', 'like', '%' . $searchTerm . '%');
+                  });
+            });
+        }
+
+        $events = $query->paginate(5);
         return view('admin.events.index', compact('events'));
     }
 
@@ -36,7 +52,6 @@ class EventController extends Controller
         Log::info('Event Store Method Hit', ['request' => $request->all()]);
 
         try {
-            // Validate request
             $validated = $request->validate([
                 'name' => 'required|string|max:255',
                 'category_id' => 'required|exists:categories,id',
@@ -46,8 +61,6 @@ class EventController extends Controller
                 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:10240',
                 'description' => 'nullable|string|max:2000',
             ]);
-
-            Log::info('Validation Successful', ['validated_data' => $validated]);
 
             $imagePath = $request->hasFile('image') 
                 ? $request->file('image')->store('events', 'public') 
@@ -63,21 +76,14 @@ class EventController extends Controller
                 'description' => $request->input('description') ?? null,
             ]);
 
-            Log::info('Event Created Successfully', ['event' => $event]);
-
-            return response()->json([
-                'success' => true,
-                'event' => $event
-            ], 201);
+            return response()->json(['success' => true, 'event' => $event], 201);
 
         } catch (\Illuminate\Validation\ValidationException $e) {
-            Log::error('Validation Failed', ['errors' => $e->validator->errors()->all()]);
             return response()->json([
                 'success' => false,
                 'errors' => $e->validator->errors()->toArray()
             ], 422);
         } catch (\Exception $e) {
-            Log::error('Event Creation Failed', ['error' => $e->getMessage()]);
             return response()->json([
                 'success' => false,
                 'message' => 'An unexpected error occurred. Try again.',
@@ -134,11 +140,8 @@ class EventController extends Controller
 
             $event->delete();
 
-            Log::info('Event Deleted Successfully', ['event_id' => $id]);
-
             return response()->json(['success' => true, 'message' => 'Event deleted successfully!']);
         } catch (\Exception $e) {
-            Log::error('Event Deletion Failed', ['error' => $e->getMessage()]);
             return response()->json(['success' => false, 'message' => 'Error deleting event.'], 500);
         }
     }

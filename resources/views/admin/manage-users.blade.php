@@ -10,13 +10,19 @@
         </div>
     @endif
 
-    <div class="flex-grow">
+    <!-- Search Bar -->
+    <div class="mb-4">
+        <input type="text" id="searchInput" class="border p-2 w-full rounded" placeholder="Search by name or email...">
+    </div>
+
+    <div class="flex-grow overflow-x-auto">
         <table class="table table-bordered w-full text-left" id="usersTable">
             <thead class="bg-gray-800 text-white">
                 <tr>
                     <th class="px-6 py-2">#</th>
                     <th class="px-6 py-2">Name</th>
                     <th class="px-6 py-2">Email</th>
+                    <th class="px-6 py-2">Status</th>
                     <th class="px-6 py-2">Registered At</th>
                     <th class="px-6 py-2">Action</th>
                 </tr>
@@ -27,14 +33,27 @@
                         <td class="px-6 py-2 serial-number">{{ $loop->iteration }}</td>
                         <td class="px-6 py-2">{{ $user->name }}</td>
                         <td class="px-6 py-2">{{ $user->email }}</td>
+                        <td class="px-6 py-2">{{ $user->status == 1 ? 'Active' : 'Inactive' }}</td>
                         <td class="px-6 py-2">{{ $user->created_at->format('M d, Y') }}</td>
                         <td class="px-6 py-2 flex space-x-2">
+                            @if($user->status == 1)
+                                <!-- Deactivate Button -->
+                                <form action="{{ route('admin.manage-users.deactivate', $user->id) }}" method="POST" class="deactivate-user-form">
+                                    @csrf
+                                    <button type="submit" class="bg-yellow-500 text-white p-2 rounded-md hover:bg-yellow-600">Deactivate</button>
+                                </form>
+                            @else
+                                <!-- Activate Button -->
+                                <form action="{{ route('admin.manage-users.activate', $user->id) }}" method="POST" class="activate-user-form">
+                                    @csrf
+                                    <button type="submit" class="bg-green-500 text-white p-2 rounded-md hover:bg-green-600">Activate</button>
+                                </form>
+                            @endif
+                            <!-- Delete Button -->
                             <form class="delete-user-form" action="{{ route('admin.manage-users.destroy', $user->id) }}" method="POST">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm bg-red-500 text-white p-2 rounded-md hover:bg-red-600">
-                                    Delete
-                                </button>
+                                <button type="submit" class="bg-red-500 text-white p-2 rounded-md hover:bg-red-600">Delete</button>
                             </form>
                         </td>
                     </tr>
@@ -50,24 +69,15 @@
 @endsection
 
 @section('scripts')
-<!-- Include SweetAlert2 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const forms = document.querySelectorAll('.delete-user-form');
 
-    // Test if SweetAlert2 is working
-    // Swal.fire('SweetAlert2 is working!');
-
     forms.forEach(form => {
         form.addEventListener('submit', function(e) {
             e.preventDefault();
-
-            const row = this.closest('tr');
-            const action = this.getAttribute('action');
-            const formData = new URLSearchParams(new FormData(this));
-
             Swal.fire({
                 title: 'Are you sure?',
                 text: "This user will be permanently deleted!",
@@ -78,60 +88,29 @@ document.addEventListener('DOMContentLoaded', function() {
                 confirmButtonText: 'Yes, delete it!'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    fetch(action, {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                            'Accept': 'application/json'
-                        },
-                        body: formData
-                    })
-                    .then(response => {
-                        if (response.ok) {
-                            // Animate row removal
-                            row.style.transition = 'opacity 0.3s';
-                            row.style.opacity = 0;
-
-                            setTimeout(() => {
-                                row.remove();
-                                renumberRows();
-                            }, 300);
-
-                            Swal.fire(
-                                'Deleted!',
-                                'The user has been deleted.',
-                                'success'
-                            );
-                        } else {
-                            Swal.fire(
-                                'Error!',
-                                'There was a problem deleting the user.',
-                                'error'
-                            );
-                        }
-                    })
-                    .catch(err => {
-                        console.error(err);
-                        Swal.fire(
-                            'Error!',
-                            'Something went wrong.',
-                            'error'
-                        );
-                    });
+                    this.submit();
                 }
             });
         });
     });
 
-    function renumberRows() {
+    // Search Filter
+    const searchInput = document.getElementById('searchInput');
+    searchInput.addEventListener('keyup', function() {
+        const filter = this.value.toLowerCase();
         const rows = document.querySelectorAll('#usersTable tbody tr');
-        rows.forEach((row, index) => {
-            const serialCell = row.querySelector('.serial-number');
-            if (serialCell) {
-                serialCell.textContent = index + 1;
+
+        rows.forEach(row => {
+            const name = row.children[1].textContent.toLowerCase();
+            const email = row.children[2].textContent.toLowerCase();
+
+            if (name.includes(filter) || email.includes(filter)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
             }
         });
-    }
+    });
 });
 </script>
 @endsection

@@ -124,6 +124,9 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     // User Management
     Route::get('manage-users', [UserController::class, 'index'])->name('manage-users');
     Route::delete('manage-users/{id}', [UserController::class, 'destroy'])->name('manage-users.destroy');
+    Route::post('manage-users/{id}/activate', [UserController::class, 'activate'])->name('manage-users.activate');
+    Route::post('manage-users/{id}/deactivate', [UserController::class, 'deactivate'])->name('manage-users.deactivate');
+
 
     // Admin Profile
     Route::get('profile', [AdminProfileController::class, 'show'])->name('profile');

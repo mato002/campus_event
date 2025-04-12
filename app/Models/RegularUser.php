@@ -23,6 +23,7 @@ class RegularUser extends Authenticatable
         'phone',
         'location',
         'bio',
+        'status',
 
     ];
 

@@ -4,7 +4,22 @@
 <div class="flex flex-col h-full min-h-screen">
     <h2 class="text-3xl font-semibold mb-6">Events List</h2>
 
-    <a href="{{ route('admin.events.create') }}" class="btn btn-primary mb-4 bg-blue-500 text-white hover:bg-blue-600 p-3 rounded-md">Create Event</a>
+    <!-- Search Bar and Create Event Button -->
+    <div class="flex justify-between items-center mb-4">
+        <a href="{{ route('admin.events.create') }}" class="btn btn-primary bg-blue-500 text-white hover:bg-blue-600 p-3 rounded-md">Create Event</a>
+        
+        <!-- Search Bar -->
+        <form action="{{ route('admin.events.index') }}" method="GET" class="flex items-center">
+            <input 
+                type="text" 
+                name="search" 
+                value="{{ request('search') }}" 
+                placeholder="Search events..." 
+                class="p-2 rounded-md border border-gray-300 focus:outline-none focus:ring focus:border-blue-500"
+            />
+            <button type="submit" class="ml-2 bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600">Search</button>
+        </form>
+    </div>
 
     <div class="flex-grow h-3/4">
         <table class="table table-bordered w-full text-left">

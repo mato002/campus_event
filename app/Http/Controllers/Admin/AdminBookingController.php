@@ -9,12 +9,24 @@ use Illuminate\Http\Request;
 
 class AdminBookingController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $bookings = Event::with(['regularUsers'])
-            ->whereHas('regularUsers')
-            ->paginate(5); // Paginate with 10 bookings per page
+        $search = $request->input('search');
 
+        $bookings = Event::with(['regularUsers' => function ($query) use ($search) {
+            if ($search) {
+                $query->where('name', 'like', "%{$search}%")
+                      ->orWhere('email', 'like', "%{$search}%");
+            }
+        }])
+        ->whereHas('regularUsers', function ($query) use ($search) {
+            if ($search) {
+                $query->where('name', 'like', "%{$search}%")
+                      ->orWhere('email', 'like', "%{$search}%");
+            }
+        })
+        ->orWhere('name' ,'like', "%{$search}%")
+        ->paginate(5); // Pagination remains at 5 bookings per page
 
         return view('admin.bookings', compact('bookings'));
     }
