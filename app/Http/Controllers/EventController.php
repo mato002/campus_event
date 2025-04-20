@@ -8,7 +8,6 @@ use App\Models\RegularUser;
 use App\Models\Event;
 use App\Models\Category;
 
-
 class EventController extends Controller
 {
     // Display all available events (separating upcoming and past events)
@@ -44,42 +43,36 @@ class EventController extends Controller
     }
 
     // Book an event (AJAX version)
-    public function bookEvent(Request $request, $eventId)
-    {
-        $user = Auth::guard('regular_user')->user(); // Ensure it fetches RegularUser
-        
-        // Check if the user is logged in
-        if (!$user) {
-            return response()->json(['message' => 'Please log in first.'], 400);
-        }
+// Book an event (Standard form submission)
+public function bookEvent(Request $request, $eventId)
+{
+    $user = Auth::guard('regular_user')->user();
 
-        // Find the event or return error if not found
-        $event = Event::findOrFail($eventId);
-
-        // Check if the event exists
-        if (!$event) {
-            return response()->json(['message' => 'Event not found.'], 400);
-        }
-
-        $now = now(); // Get the current timestamp
-        $eventStart = \Carbon\Carbon::parse($event->start_date);
-
-        // Ensure the event is upcoming (future date and time)
-        if ($eventStart->lte($now)) {
-            return response()->json(['message' => 'You can only book upcoming events.'], 400);
-        }
-
-        // Check if user already booked the event
-        if ($user->bookedEvents()->where('event_id', $eventId)->exists()) {
-            return response()->json(['message' => 'You have already booked this event.'], 400);
-        }
-
-        // Book the event for the user
-        $user->bookedEvents()->attach($eventId);
-
-        // Return success message for AJAX
-        return response()->json(['message' => 'Event booked successfully!'], 200);
+    if (!$user) {
+        return redirect()->back()->with('error', 'Please log in first.');
     }
+
+    $event = Event::findOrFail($eventId);
+
+    if (!$event) {
+        return redirect()->back()->with('error', 'Event not found.');
+    }
+
+    $now = now();
+    $eventStart = \Carbon\Carbon::parse($event->start_date);
+
+    if ($eventStart->lte($now)) {
+        return redirect()->back()->with('error', 'You can only book upcoming events.');
+    }
+
+    if ($user->bookedEvents()->where('event_id', $eventId)->exists()) {
+        return redirect()->back()->with('error', 'You have already booked this event.');
+    }
+
+    $user->bookedEvents()->attach($eventId);
+
+    return redirect()->back()->with('status', 'Event booked successfully!');
+}
 
     // View user's booked events
     public function myBookings()
@@ -124,5 +117,4 @@ class EventController extends Controller
 
         return view('events.category', compact('events', 'category'));
     }
-
 }

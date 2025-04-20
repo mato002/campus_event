@@ -26,23 +26,37 @@
                 <div class="col-md-7">
                     <!-- Event Info -->
                     <h2 class="event-title">{{ $event->name }}</h2>
-                    <p class="event-category"><strong>Category:</strong> {{ $event->category ->name }}</p>
+                    <p class="event-category"><strong>Category:</strong> {{ $event->category->name }}</p>
                     <p class="event-venue"><strong>Venue:</strong> {{ $event->venue->name }}</p>
                     <p class="event-date"><strong>Date:</strong> {{ \Carbon\Carbon::parse($event->start_date)->format('M d, Y') }}</p>
                     <p class="event-description"><strong>Description:</strong> {{ $event->description ?? 'No description available.' }}</p>
                 </div>
             </div>
 
+            <!-- Booking Status -->
+            @if(session('status'))
+                <div class="alert alert-success mt-3">
+                    {{ session('status') }}
+                </div>
+            @elseif(session('error'))
+                <div class="alert alert-danger mt-3">
+                    {{ session('error') }}
+                </div>
+            @endif
+
             <div class="mt-6 d-flex justify-content-between">
-                <!-- Buttons in One Row -->
+                <!-- Back to Events -->
                 <a href="{{ route('events.index') }}" class="px-6 py-3 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition duration-200">
                     Back to Events
+                </a>
+                <a href="{{ route('my.bookings') }}" class="px-6 py-3 bg-green-500 text-white rounded-md hover:bg-gray-600 transition duration-200">
+                   View My Bookings
                 </a>
 
                 <!-- Booking Form -->
                 <form id="bookEventForm" method="POST" action="{{ route('book.event', $event->id) }}">
                     @csrf
-                    <button type="submit" id="bookEventButton" class="px-6 py-3 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-200" onclick="showBookingPopup(event)">
+                    <button type="submit" id="bookEventButton" class="px-6 py-3 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-200">
                         Book Event
                     </button>
                 </form>
@@ -50,39 +64,6 @@
         </div>
     </div>
 </div>
-
-<!-- Booking Popup -->
-<div id="bookingPopup" class="booking-popup" style="display: none;">
-    <div class="popup-content">
-        @if(session('status') === 'success')
-            <p>Your event has been successfully booked!</p>
-        @else
-            <p>This event has already passed, and you cannot book it.</p>
-        @endif
-        <button onclick="closeBookingPopup()">OK</button>
-    </div>
-</div>
-
-<script>
-    // Function to display the booking popup
-    function showBookingPopup(e) {
-        e.preventDefault(); // Prevent the form submission (page reload)
-
-        // Show the popup
-        document.getElementById('bookingPopup').style.display = 'block';
-
-        // Simulate form submission after 1 second (for the demo)
-        setTimeout(function() {
-            document.getElementById('bookEventForm').submit(); // Submit the form to actually book the event
-        }, 1000);
-    }
-
-    // Function to close the popup
-    function closeBookingPopup() {
-        document.getElementById('bookingPopup').style.display = 'none';
-    }
-</script>
-
 @endsection
 
 @section('styles')
@@ -125,9 +106,9 @@
         width: 600px;
         height: auto;
         border-radius: 8px;
-        object-fit: contain;  /* Changed from cover to contain */
-        max-width: 100%;  /* Ensures image size is consistent */
-        max-height: 300px;  /* Keeps image size proportional */
+        object-fit: contain;
+        max-width: 100%;
+        max-height: 300px;
     }
 
     /* Event Title */
@@ -158,6 +139,8 @@
     /* Button Styles */
     .d-flex {
         display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
     }
 
     .justify-content-between {
@@ -176,57 +159,45 @@
 
     .bg-gray-500 {
         background-color: #6b7280;
-    }
-
-    .text-white {
         color: white;
-    }
-
-    .hover\:bg-gray-600:hover {
-        background-color: #4b5563;
-    }
-
-    .transition {
-        transition: all 0.3s ease;
     }
 
     .bg-blue-500 {
         background-color: #007bff;
-    }
-
-    .hover\:bg-blue-600:hover {
-        background-color: #0056b3;
-    }
-
-    /* Booking Popup */
-    .booking-popup {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: white;
-        border-radius: 8px;
-        padding: 20px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        z-index: 1000;
-    }
-
-    .popup-content p {
-        font-size: 1.2rem;
-        margin-bottom: 10px;
-    }
-
-    .popup-content button {
-        padding: 10px 20px;
-        background-color: #007bff;
         color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
     }
 
-    .popup-content button:hover {
-        background-color: #0056b3;
+    .bg-blue-600 {
+        background-color: #006ae6;
+    }
+
+    .bg-green-500 {
+        background-color: #10b981;
+    }
+
+    .bg-green-600 {
+        background-color: #059669;
+    }
+
+    .alert {
+        padding: 10px;
+        margin-top: 15px;
+        border-radius: 5px;
+    }
+
+    .alert-success {
+        background-color: #d4edda;
+        color: #155724;
+    }
+
+    .alert-danger {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+
+    .mx-2 {
+        margin-left: 0.5rem;
+        margin-right: 0.5rem;
     }
 </style>
 @endsection
