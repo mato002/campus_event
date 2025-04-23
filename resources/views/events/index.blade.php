@@ -79,11 +79,14 @@
         color: white;
         padding: 60px 20px;
         border-radius: 8px;
+        position: relative;
+        overflow: hidden;
     }
     .hero-section h1 {
         font-size: 2.5rem;
         font-weight: bold;
         margin-bottom: 10px;
+        animation: fadeInOutColor 5s infinite; /* Add animation */
     }
     .hero-section p {
         font-size: 1.2rem;
@@ -204,6 +207,30 @@
 
         .event-card {
             min-height: 400px; /* Adjust height for smaller screens */
+        }
+    }
+
+    /* Animation for fading in and out with color change */
+    @keyframes fadeInOutColor {
+        0% {
+            opacity: 0;
+            color: #007bff;
+        }
+        25% {
+            opacity: 1;
+            color: #ff6f61;
+        }
+        50% {
+            opacity: 1;
+            color: #32cd32; /* Green */
+        }
+        75% {
+            opacity: 1;
+            color: #ff4500; /* Orange */
+        }
+        100% {
+            opacity: 0;
+            color: #00c6ff; /* Blue */
         }
     }
 </style>

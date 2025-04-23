@@ -10,9 +10,6 @@
                 <div class="event-title">
                     <h3>{{ $event->name }}</h3>
                 </div>
-                <div class="event-description">
-                    <p>{{ $event->description }}</p>
-                </div>
 
                 <div class="event-image">
                     <img src="{{ $event->image ? asset('storage/' . $event->image) : asset('images/default-event.jpg') }}" alt="{{ $event->name }}" class="event-img">

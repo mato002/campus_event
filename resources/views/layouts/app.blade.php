@@ -146,6 +146,18 @@
         header h1 {
             margin: 0;
             font-size: 24px;
+            white-space: nowrap;
+            overflow: hidden;
+            animation: scrollText 10s linear infinite;
+        }
+
+        @keyframes scrollText {
+            0% {
+                transform: translateX(100%);
+            }
+            100% {
+                transform: translateX(-100%);
+            }
         }
 
         nav ul {
@@ -219,7 +231,6 @@
             text-decoration: underline;
         }
 
-        /* ✅ Social Icons */
         .social-icons a {
             color: white;
             margin-bottom: 15px;
@@ -250,7 +261,6 @@
             color: white;
         }
 
-        /* ✅ Copyright */
         .footer-bottom {
             text-align: center;
             padding-top: 20px;
@@ -258,7 +268,6 @@
             color: #ccc;
         }
 
-        /* ✅ Responsive Styles */
         @media (max-width: 768px) {
             .top-bar {
                 flex-direction: column;
@@ -295,12 +304,10 @@
 
 <body>
 
-    <!-- ✅ Top Bar with Search and Profile/Login/Register -->
+    <!-- ✅ Top Bar -->
     <div class="top-bar">
-
         <div class="search-container">
             <form action="{{ route('search') }}" method="GET">
-
                 <input type="text" name="query" placeholder="Search events, venues, users, categories..." required>
                 <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
             </form>
@@ -313,7 +320,6 @@
                     <div class="dropdown-content">
                         <a href="{{ route('user.profile') }}">Profile</a>
                         <a href="{{ route('my.bookings') }}">My Bookings</a>
-
                         <form id="logout-form" action="{{ route('user.logout') }}" method="POST" style="display: none;">
                             @csrf
                         </form>
@@ -327,33 +333,33 @@
         </div>
     </div>
 
-<!-- ✅ Header Section -->
-<header>
-    <div style="display: flex; align-items: center; gap: 20px;">
-        <a href="{{ route('home') }}">
-            <img src="{{ asset('storage/logos/logo.png') }}" alt="Website Logo" style="height: 50px;">
-        </a>
-        <h1>Campus Events</h1>
-    </div>
-    <nav>
-        <ul>
-            <li><a href="{{ route('home') }}">Home</a></li>
-            <li><a href="{{ route('events.index') }}">Events</a></li>
-            <li><a href="{{ route('categories.index') }}">Categories</a></li>
-            <li><a href="{{ route('my.bookings') }}">My Bookings</a></li>
-            <li><a href="{{ route('about') }}">About</a></li>
-            <li><a href="{{ route('faqs') }}">FAQs</a></li>
-            <li><a href="{{ route('contact') }}">Contact</a></li>
-        </ul>
-    </nav>
-</header>
+    <!-- ✅ Header -->
+    <header>
+        <div style="display: flex; align-items: center; gap: 20px; overflow: hidden; width: 300px;">
+            <a href="{{ route('home') }}">
+                <img src="{{ asset('storage/logos/logo.png') }}" alt="Website Logo" style="height: 50px;">
+            </a>
+            <h1>Campus Events</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="{{ route('home') }}">Home</a></li>
+                <li><a href="{{ route('events.index') }}">Events</a></li>
+                <li><a href="{{ route('categories.index') }}">Categories</a></li>
+                <li><a href="{{ route('my.bookings') }}">My Bookings</a></li>
+                <li><a href="{{ route('about') }}">About</a></li>
+                <li><a href="{{ route('faqs') }}">FAQs</a></li>
+                <li><a href="{{ route('contact') }}">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
 
     <!-- ✅ Main Content -->
     <div class="container">
         @yield('content')
     </div>
 
-    <!-- ✅ Footer Section -->
+    <!-- ✅ Footer -->
     <footer>
         <div class="footer-container">
             <div class="footer-section">
@@ -365,7 +371,6 @@
                     <a href="#" class="social-btn"><i class="fab fa-youtube"></i>YouTube</a>
                 </div>
             </div>
-
             <div class="footer-section">
                 <h3>Important Links</h3>
                 <ul>
@@ -376,7 +381,6 @@
                     <li><a href="/contact">> Contact</a></li>
                 </ul>
             </div>
-
             <div class="footer-section">
                 <h3>Contact Info</h3>
                 <ul>
@@ -386,7 +390,6 @@
                 </ul>
             </div>
         </div>
-
         <div class="footer-bottom">
             <p>&copy; 2025 Matech Technologies. All Rights Reserved.</p>
         </div>
